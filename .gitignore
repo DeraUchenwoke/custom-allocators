@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# .vs and project-related files
+.vs/*
+custom-allocators.sln
+custom-allocators.vcxproj
+custom-allocators.vcxproj.*
