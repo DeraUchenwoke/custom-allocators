@@ -12,16 +12,37 @@ class BasicAllocator
 
 	// copy constuctor is also stateless
 	// this allows the value type of the object created to be consistent when copied 
-	// There are explicit and implicit ways of doing this *.
-	BasicAllocator(const BasicAllocator<Type>&) noexcept {}
+	// There are explicit and implicit ways of doing this *
+	template<typename U> 
+	BasicAllocator(const BasicAllocator<U>&) noexcept {}
 
 	[[nodiscard]] Type* allocate(size_t num) return new Type[num]; // initialises the memory requested
-	void deallocate(Type* p, size_t num) noexcept { // deallocate should not throw runtime exceptions
+	void deallocate(Type* p, size_t num) noexcept 
+	{ // deallocate should not throw runtime exceptions
 		delete(p); 
 	}
 };
 
+// See 'Relationship between instances' -> 'a1 == a2': https://en.cppreference.com/w/cpp/named_req/Allocator
+// Checks to see if the storage of the allocator of type T
+// can be used to deallocate storage of the same allocator of U. 
+// Returns true if it can and false if it cannot. 
+// It also should not throw any exceptions.
+
+template <typename T1, typename T2> 
+bool operator==(const BasicAllocator<T1>&, const BasicAllocator<T2>&) noexcept
+{
+	return true; 
+}
+
+template <typename T1, typename T2> 
+bool operator!= (const BasicAllocator<T1>&, const BasicAllocator<T2>&) noexcept
+{
+	return false; 
+}
+
 /*
+* '&': A reference to the address of the object. 
 * What is a constructor?: https://en.cppreference.com/w/cpp/language/constructor
 * 'value_type' meaning: https://cplusplus.com/forum/beginner/275487/
 * 'using' logic/meaning: https://stackoverflow.com/questions/20790932/what-is-the-logic-behind-the-using-keyword-in-c
@@ -32,5 +53,5 @@ class BasicAllocator
 * 'virtual': A function which can be overwritten in a class derived from the current one.
 * 'noexcept': https://en.cppreference.com/w/cpp/language/noexcept_spec
 * Different forms of copy constructors: https://stackoverflow.com/questions/32537994/c-template-copy-constructor-on-template-class
-*
+* 'bool operator==': https://stackoverflow.com/questions/23162870/c-bool-operator
 */
