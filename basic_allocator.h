@@ -5,9 +5,10 @@
 template <typename T> 
 class BasicAllocator
 {
+public:
 	using Type = typename T::value_type; // user-defined value
 
-	// constructor has nothing to do because it is empty (has no params) -> 'stateless'
+	// constructor has nothing to do -> 'stateless'
 	BasicAllocator() noexcept {}
 
 	// copy constuctor is also stateless
@@ -16,10 +17,20 @@ class BasicAllocator
 	template<typename U> 
 	BasicAllocator(const BasicAllocator<U>&) noexcept {}
 
-	[[nodiscard]] Type* allocate(size_t num) return new Type[num]; // initialises the memory requested
-	void deallocate(Type* p, size_t num) noexcept 
-	{ // deallocate should not throw runtime exceptions
-		delete(p); 
+	[[nodiscard]] Type* allocate(size_t num) 
+	{ 
+		monitor(p, num, true);
+		return new Type[num]; // initialises the memory requested
+	} 
+	void deallocate(Type* p, size_t num) noexcept // deallocate should not throw runtime exceptions
+	{ 
+		monitor(p, num, false);
+		delete(p);  
+	}
+private: 
+	void monitor(Type* p, size_t num, bool is_alloc)
+	{
+		std::cout << (is_alloc ? "Allocated: " : "Deallocated: ") << sizeof(T) * num << ", at address -> " << &p << "\n";
 	}
 };
 
