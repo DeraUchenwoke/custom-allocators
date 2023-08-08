@@ -2,9 +2,7 @@
 
 int main()
 {
-    std::cout << "Hello World!\n";
-
-    // include construct_at and destroy_at functions
+ 
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
