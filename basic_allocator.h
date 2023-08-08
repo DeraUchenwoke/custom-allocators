@@ -30,7 +30,7 @@ public:
 private: 
 	void monitor(Type* p, size_t num, bool is_alloc)
 	{
-		std::cout << (is_alloc ? "Allocated: " : "Deallocated: ") << sizeof(T) * num << ", at address -> " << &p << "\n";
+		std::cout << (is_alloc ? "Allocated: " : "Deallocated: ") << sizeof(Type) * num << ", at address -> " << &p << "\n";
 	}
 };
 
