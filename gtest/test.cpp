@@ -4,12 +4,12 @@
 #include <vector>
 TEST(AllocationTest, HandlesTooManyBytesInput)
 {
-	BasicAllocator<unsigned int> ba; // construct test obj
+	BasicAllocator<unsigned int> ba; // construct test object
 	constexpr size_t num = (std::numeric_limits<size_t>::max() / sizeof(unsigned int)) + 1;
 	
 	// cant do angled brackets '<' or '>' within macros 
 	EXPECT_THROW({
-		if (ba.allocate(num)); // allocates only the return pointer is not NULL
+		if (ba.allocate(num)); // allocates only if the return pointer is not NULL
 	}, std::bad_array_new_length);
 
 }
