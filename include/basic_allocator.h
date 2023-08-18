@@ -1,12 +1,15 @@
 #pragma once
 
+#include <iostream> // for 'std::cout'
 #include <cstddef> // for 'size_t'
+#include <new> // for 'std::bad_alloc'
+#include <limits> // for 'std::numeric_limits'
 
 template <typename T> 
 class BasicAllocator
 {
 public:
-	using Type = typename T::value_type; // user-defined value
+	typedef T value_type; // user-defined value
 
 	// constructor has nothing to do -> 'stateless'
 	BasicAllocator() noexcept {}
@@ -17,20 +20,27 @@ public:
 	template<typename U> 
 	BasicAllocator(const BasicAllocator<U>&) noexcept {}
 
-	[[nodiscard]] Type* allocate(size_t num) 
+	[[nodiscard]] T* allocate(size_t num) 
 	{ 
+		if (num > std::numeric_limits<std::size_t>::max() / sizeof(T)) 
+		{
+			throw std::bad_array_new_length();
+		}
+		
+		auto p = new T[num]; 
+
 		monitor(p, num, true);
-		return new Type[num]; // initialises the memory requested
+		return p; // initialises the memory requested
 	} 
-	void deallocate(Type* p, size_t num) noexcept // deallocate should not throw runtime exceptions
+	void deallocate(T* p, size_t num) noexcept // deallocate should not throw runtime exceptions
 	{ 
 		monitor(p, num, false);
 		delete(p);  
 	}
 private: 
-	void monitor(Type* p, size_t num, bool is_alloc)
+	void monitor(T* p, size_t num, bool is_alloc)
 	{
-		std::cout << (is_alloc ? "Allocated: " : "Deallocated: ") << sizeof(Type) * num << ", at address -> " << &p << "\n";
+		std::cout << (is_alloc ? "Allocated: " : "Deallocated: ") << sizeof(T) * num << ", at address -> " << &p << "\n";
 	}
 };
 
