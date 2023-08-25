@@ -33,6 +33,7 @@
 
 # .vs and project-related files
 .vs/*
+x64/*
 custom-allocators.sln
 custom-allocators.vcxproj
 custom-allocators.vcxproj.*
